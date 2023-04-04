@@ -1,11 +1,12 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 interface ChatMessage {
   userName: string;
   message: string;
 }
+
+let socket: Socket;
 
 export default function Home() {
   const [userName, setUserName] = useState<string>("");
@@ -13,7 +14,7 @@ export default function Home() {
   const [chatMessage, setChatMessage] = useState<ChatMessage[]>([]);
 
   useEffect((): any => {
-    const socket = io(process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8080", { path: "/socket/chat" });
+    socket = io(process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8080", { path: "/socket/chat" });
 
     socket.on("connect", () => {
       console.log("소켓연결 성공!!!", socket.id);
@@ -27,17 +28,14 @@ export default function Home() {
     if (socket) return () => socket.disconnect();
   }, []);
 
-  const onMessageSumit = async () => {
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/send_message`, {
-        userName,
-        message,
-      });
-      {
-        res.status === 200 && setMessage("");
-      }
-    } catch (error) {
-      console.log(error);
+  const onMessageSubmit = () => {
+    socket.emit("sendMessage", { userName, message }, () => setMessage(""));
+  };
+
+  const enterKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      onMessageSubmit();
     }
   };
 
@@ -48,9 +46,13 @@ export default function Home() {
           return <div key={index}>{`${item.userName} : ${item.message}`}</div>;
         })}
       </div>
-      <input type="text" placeholder="닉네임을 입력해주세요" onChange={(e) => setUserName(e.currentTarget.value)} />
-      <input type="text" placeholder="메세지를 입력해주세요" onChange={(e) => setMessage(e.currentTarget.value)} />
-      <button onClick={onMessageSumit}>메세지 전송</button>
+      <form>
+        <input type="text" placeholder="닉네임을 입력해주세요" onChange={(e) => setUserName(e.currentTarget.value)} />
+        <input type="text" placeholder="메세지를 입력해주세요" onChange={(e) => setMessage(e.currentTarget.value)} onKeyDown={enterKeyDown} />
+        <button type="button" onClick={onMessageSubmit}>
+          메세지 전송
+        </button>
+      </form>
     </div>
   );
 }
