@@ -1,0 +1,94 @@
+@import "./color.scss";
+
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.userNameInput{
+    border-radius: 10px;
+    border : 1px solid black;
+    height: 40px;
+    padding: 10px;
+}
+
+.chatTemplate{
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: wheat;
+    width: 300px;
+    height: 500px;
+    animation: fadein 1.2s;
+    @keyframes fadein {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+    @-moz-keyframes fadein { /* Firefox */
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+    @-webkit-keyframes fadein { /* Safari and Chrome */
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+
+    .chatMessageBox{
+        height: 92%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 10px 15px;
+        div{
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            &.myMessage{
+                align-items: flex-end;
+                span{
+                    display: none;
+                }
+            }
+            &.otherMessage{
+                align-items: flex-start;
+                span{
+                    font-size: 14px;
+                    outline: none;
+                }
+            }
+        
+            p{
+                font-weight: 600;
+                font-size: 16px;
+                padding: 5px 10px;
+                background-color: white;
+                border-radius: 10px;
+                max-width: 150px;
+                word-wrap: break-word;
+            }
+        }
+    }
+
+    .chatInput{
+        border-radius: 10px;
+        height: 40px;
+        width: 100%;
+        border: none;
+        padding: 10px;
+    }
+}
