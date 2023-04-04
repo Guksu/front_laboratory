@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { io, Socket } from "socket.io-client";
-import styles from "../styles/chat.module.scss";
+import styles from "@/styles/chat.module.scss";
 import { nameState } from "@/states";
-
-interface ChatMessage {
-  userName: string;
-  message: string;
-}
+import { ChatMessage } from "@/dataType";
+import ChatTemplate from "@/components/chat/ChatTemplate";
+import NickNameInput from "@/components/common/NickNameInput";
 
 let socket: Socket;
 
@@ -41,8 +39,10 @@ export default function Home() {
   }, [chatMessage]);
 
   const onMessageSubmit = () => {
-    socket.emit("sendMessage", { userName, message });
-    setMessage("");
+    if (message !== "") {
+      socket.emit("sendMessage", { userName, message });
+      setMessage("");
+    }
   };
 
   const userNameEnterKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -62,29 +62,16 @@ export default function Home() {
   return (
     <div className={styles.main}>
       {userName === "" ? (
-        <input className={styles.userNameInput} type="text" placeholder="닉네임을 입력해주세요" onKeyDown={(e) => userNameEnterKeyDown(e)} />
+        <NickNameInput userNameEnterKeyDown={userNameEnterKeyDown} />
       ) : (
-        <div className={styles.chatTemplate}>
-          <div className={styles.chatMessageBox}>
-            {chatMessage.map((item, index) => {
-              return (
-                <div key={index} className={item.userName === userName ? styles.myMessage : styles.otherMessage}>
-                  <span>{item.userName}</span>
-                  <p>{item.message}</p>
-                </div>
-              );
-            })}
-            <div ref={scrollRef} />
-          </div>
-          <input
-            className={styles.chatInput}
-            type="text"
-            placeholder="메세지를 입력해주세요"
-            value={message}
-            onChange={(e) => setMessage(e.currentTarget.value)}
-            onKeyDown={messageEnterKeyDown}
-          />
-        </div>
+        <ChatTemplate
+          chatMessage={chatMessage}
+          scrollRef={scrollRef}
+          message={message}
+          setMessage={setMessage}
+          messageEnterKeyDown={messageEnterKeyDown}
+          userName={userName}
+        />
       )}
     </div>
   );
