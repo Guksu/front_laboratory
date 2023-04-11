@@ -20,7 +20,7 @@
     background-color: wheat;
     width: 300px;
     height: 500px;
-    animation: fadein 1.2s;
+    position: relative;
     @keyframes fadein {
         from {
             opacity:0;
@@ -45,6 +45,7 @@
             opacity:1;
         }
     }
+    animation: fadein 1.2s;
 
     .chatMessageBox{
         height: 92%;
@@ -52,9 +53,22 @@
         flex-direction: column;
         gap: 10px;
         overflow-x: hidden;
-        overflow-y: scroll;
-        padding: 10px 15px;
-        div{
+        overflow-y: auto;
+        header{
+            padding: 10px 15px;
+            border-radius:10px;
+            position: sticky;
+            top: 0px;
+            display: flex;
+            justify-content: space-between;
+            background-color: wheat;
+            img{
+                cursor: pointer;
+            }
+        }
+
+        li{
+            padding: 1px 15px;
             display: flex;
             flex-direction: column;
             gap: 3px;
@@ -90,5 +104,70 @@
         width: 100%;
         border: none;
         padding: 10px;
+    }
+
+    aside{
+        position: absolute;
+        border-radius: 10px;
+        display: flex;
+        justify-content: flex-end;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, .5);
+        div{
+            border-radius: 10px;
+            width: 80%;
+            height: 100%;
+            background-color:#fff9db;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            @keyframes fadeInRight {
+                from {
+                    opacity: 0;
+                    transform: translate3d(15%, 0, 0);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateZ(0);
+                }
+            }
+            @-moz-keyframes fadein { /* Firefox */
+                from {
+                    opacity: 0;
+                    transform: translate3d(15%, 0, 0);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateZ(0);
+                }
+            }
+            @-webkit-keyframes fadein { /* Safari and Chrome */
+                from {
+                    opacity: 0;
+                    transform: translate3d(15%, 0, 0);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateZ(0);
+                }
+            }
+            animation: fadeInRight 0.5s;
+            span{
+                font-weight: 800;
+                margin-bottom: 20px;
+            }
+            li{
+                font-size: 14px;
+            }
+            .myName{
+                font-weight: 800;
+            }
+       
+        }
     }
 }

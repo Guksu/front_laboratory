@@ -1,6 +1,9 @@
-import { ChatMessage } from "@/dataType";
+import { useState } from "react";
+import { ChatMessage, ChatUserList } from "@/interfaces/interface";
 import styles from "@/styles/chat.module.scss";
+import Image from "next/image";
 import { RefObject, Dispatch, SetStateAction } from "react";
+import ChatMenu from "./ChatMenu";
 
 type Props = {
   chatMessage: ChatMessage[];
@@ -9,22 +12,47 @@ type Props = {
   setMessage: Dispatch<SetStateAction<string>>;
   messageEnterKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   userName: string;
+  onChatLeaveClick: () => void;
+  chatUserList: ChatUserList[];
 };
 
-export default function ChatTemplate({ chatMessage, scrollRef, message, setMessage, messageEnterKeyDown, userName }: Props) {
+export default function ChatTemplate({
+  chatMessage,
+  scrollRef,
+  message,
+  setMessage,
+  messageEnterKeyDown,
+  userName,
+  onChatLeaveClick,
+  chatUserList,
+}: Props) {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  const onMenuOpen = () => {
+    setMenuOpen(true);
+  };
+
+  const onMenuClose = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <div className={styles.chatTemplate}>
-      <div className={styles.chatMessageBox}>
+      <li className={styles.chatMessageBox}>
+        <header>
+          <Image width={20} height={20} alt="뒤로가기 아이콘" src={"/images/back.png"} onClick={onChatLeaveClick} />
+          <Image width={20} height={20} alt="메뉴 아이콘" src={"/images/more.png"} onClick={onMenuOpen} />
+        </header>
         {chatMessage.map((item, index) => {
           return (
-            <div key={index} className={item.userName === userName ? styles.myMessage : styles.otherMessage}>
+            <li key={index} className={item.userName === userName ? styles.myMessage : styles.otherMessage}>
               <span>{item.userName}</span>
               <p>{item.message}</p>
-            </div>
+            </li>
           );
         })}
         <div ref={scrollRef} />
-      </div>
+      </li>
       <input
         className={styles.chatInput}
         type="text"
@@ -33,6 +61,7 @@ export default function ChatTemplate({ chatMessage, scrollRef, message, setMessa
         onChange={(e) => setMessage(e.currentTarget.value)}
         onKeyDown={messageEnterKeyDown}
       />
+      {menuOpen && <ChatMenu chatUserList={chatUserList} userName={userName} onMenuClose={onMenuClose} />}
     </div>
   );
 }

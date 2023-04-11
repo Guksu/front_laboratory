@@ -38,8 +38,13 @@ time, mark, audio, video {
 }
 
 input:focus { outline: none; }
+
 a{
     text-decoration: none;
     cursor: pointer;
 }
 
+li{
+  list-style-type: none;
+  list-style: none;
+}
