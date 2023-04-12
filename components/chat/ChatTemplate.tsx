@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { ChatMessage, ChatUserList } from "@/interfaces/interface";
 import styles from "@/styles/chat.module.scss";
-import Image from "next/image";
 import { RefObject, Dispatch, SetStateAction } from "react";
 import ChatMenu from "./ChatMenu";
+import ChatContent from "./ChatContent";
+import ChatInputBox from "./ChatInputBox";
 
 type Props = {
   chatMessage: ChatMessage[];
@@ -14,6 +15,7 @@ type Props = {
   userName: string;
   onChatLeaveClick: () => void;
   chatUserList: ChatUserList[];
+  onImgSubmit: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
 };
 
 export default function ChatTemplate({
@@ -25,6 +27,7 @@ export default function ChatTemplate({
   userName,
   onChatLeaveClick,
   chatUserList,
+  onImgSubmit,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
@@ -38,29 +41,8 @@ export default function ChatTemplate({
 
   return (
     <div className={styles.chatTemplate}>
-      <li className={styles.chatMessageBox}>
-        <header>
-          <Image width={20} height={20} alt="뒤로가기 아이콘" src={"/images/back.png"} onClick={onChatLeaveClick} />
-          <Image width={20} height={20} alt="메뉴 아이콘" src={"/images/more.png"} onClick={onMenuOpen} />
-        </header>
-        {chatMessage.map((item, index) => {
-          return (
-            <li key={index} className={item.userName === userName ? styles.myMessage : styles.otherMessage}>
-              <span>{item.userName}</span>
-              <p>{item.message}</p>
-            </li>
-          );
-        })}
-        <div ref={scrollRef} />
-      </li>
-      <input
-        className={styles.chatInput}
-        type="text"
-        placeholder="메세지를 입력해주세요"
-        value={message}
-        onChange={(e) => setMessage(e.currentTarget.value)}
-        onKeyDown={messageEnterKeyDown}
-      />
+      <ChatContent chatMessage={chatMessage} scrollRef={scrollRef} onChatLeaveClick={onChatLeaveClick} onMenuOpen={onMenuOpen} userName={userName} />
+      <ChatInputBox setMessage={setMessage} onImgSubmit={onImgSubmit} message={message} messageEnterKeyDown={messageEnterKeyDown} />
       {menuOpen && <ChatMenu chatUserList={chatUserList} userName={userName} onMenuClose={onMenuClose} />}
     </div>
   );

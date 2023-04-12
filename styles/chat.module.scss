@@ -95,15 +95,31 @@
                 max-width: 150px;
                 word-wrap: break-word;
             }
+
+            img{
+                border-radius: 10px;
+            }
         }
     }
 
-    .chatInput{
-        border-radius: 10px;
-        height: 40px;
-        width: 100%;
-        border: none;
-        padding: 10px;
+    .chatInputBox{
+        position: relative;
+        label{
+            position: absolute;
+            top:10px;
+            left:10px;
+            cursor: pointer;
+            input{
+                display: none;
+            }
+        }
+        .chatInput{
+            border-radius: 10px;
+            height: 40px;
+            width: 100%;
+            border: none;
+            padding: 10px 10px 10px 40px;
+        }
     }
 
     aside{

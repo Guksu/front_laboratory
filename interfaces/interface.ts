@@ -1,6 +1,7 @@
 export interface ChatMessage {
   userName: string;
-  message: string;
+  message?: string;
+  imagePath?: string;
 }
 
 export interface ChatUserList {
